@@ -5,8 +5,8 @@ class Node:
         self.id = id
         self.in_constraints = [] #in_constraints
         self.out_constraints = []
-        self.start_time = None  #start tid er gitt fra forrige node sin egen tid
-        self.end_time = None    # end time er gitt start tid + faktisk (actual) tid.
+        self.start_time = -1  #start tid er gitt fra forrige node sin egen tid
+        self.end_time = -1    # end time er gitt start tid + faktisk (actual) tid.
                                 # End tid for denne er start tid for neste node.
         self.actual_time = None # tid som kommer fra simulasjonene som blir kjørt. 
 
@@ -33,3 +33,21 @@ class Node:
 
     def add_out_constraints(self, out_constraint):
         self.out_constraints.append(out_constraint)
+
+    def get_start_time(self):
+        return self.start_time
+    
+    def set_start_time(self, time):
+        self.start_time = time
+
+    def get_end_time(self):
+        return self.end_time
+    
+    def set_end_time(self, time):
+        self.end_time = time
+
+    def get_actual_time(self):
+        return self.actual_time
+    
+    def set_actual_time(self, time):
+        self.actual_time = time

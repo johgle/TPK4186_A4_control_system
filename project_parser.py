@@ -13,6 +13,7 @@ import xml.dom.minidom #dom means document
 # from node import Node
 # from gate import Gate
 from gate import Gate
+from monte_carlo_simulation import MonteCarloSimulation
 from project import Project
 from checker import Checker
 
@@ -49,7 +50,7 @@ class ProjectParser():
             tasks = l.getElementsByTagName("task")
             for t in tasks: 
                 # print("Task:",t.getAttribute("name"))
-                new_task = project.new_task(t.getAttribute("name"), t.getAttribute("minimum-duration"), t.getAttribute("maximum-duration"))
+                new_task = project.new_task(t.getAttribute("name"), float(t.getAttribute("minimum-duration")), float(t.getAttribute("maximum-duration")))
                 new_task.set_lane(new_lane)
                 new_lane.append_task(new_task)
             # print("Task in lane:",new_lane.tasks)
@@ -111,8 +112,11 @@ class ProjectParser():
 
 parser = ProjectParser()
 checker = Checker()
+mcs = MonteCarloSimulation()
 project = parser.parse_project("ControlSystemProject.xml")
-parser.print_project(project)
+mcs.calculate_start_and_end_times_for_nodes(project)
+print("start time random node:", project.get_nodes().values()[0].get_start_time())
+# parser.print_project(project)
 
 # print(checker.check_start_node(project))
 # print(checker.check_end_node(project))

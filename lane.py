@@ -21,9 +21,6 @@ class Lane:
     def append_task(self, task):
         self.tasks.append(task)
 
-    def generate_workload(self):
-       self.workload = random.random() #number between 0 and 1
-
     def get_workload(self):
         return self.workload
     
