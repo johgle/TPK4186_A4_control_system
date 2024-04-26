@@ -5,6 +5,10 @@ class Node:
         self.id = id
         self.in_constraints = [] #in_constraints
         self.out_constraints = []
+        self.start_time = None  #start tid er gitt fra forrige node sin egen tid
+        self.end_time = None    # end time er gitt start tid + faktisk (actual) tid.
+                                # End tid for denne er start tid for neste node.
+        self.actual_time = None # tid som kommer fra simulasjonene som blir kjørt. 
 
     def get_id(self):
         return self.id

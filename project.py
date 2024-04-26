@@ -1,6 +1,7 @@
 
 from gate import Gate
 from lane import Lane
+from task import Task
 from precedence_constraints import Constraint
 
 
@@ -27,8 +28,8 @@ class Project:
         self.nodes[id] = gate
         return gate
       
-    def new_task(self, id):
-        task = task(id)
+    def new_task(self, id, min_dur, max_dur):
+        task = Task(id, min_dur, max_dur)
         self.nodes[id] = task
         return task
     
@@ -49,7 +50,19 @@ class Project:
     def look_for_lane(self, lane_id):
         return self.lanes.get(lane_id, None)
 
-    def new_lane(self, source, target):
+    def new_lane(self, id):
         lane = Lane(id)
-        self.lane[id] = lane
+        self.lanes[id] = lane
+        # print("Lane added")
         return lane
+
+    def print_nodes(self):
+        for key, value in self.nodes.items():
+            if isinstance(value, Gate):
+                print(key+":"+ str(value))
+            if isinstance(value, Task):
+                print(key+":",value.id, value.minimum_duration, value.maximum_duration, value.expected_duration)
+
+    def print_constraints(self):
+        for c in self.constraints:
+            print("Constraint", c.source_node.id, "-", c.target_node.id)
