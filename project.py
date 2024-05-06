@@ -32,6 +32,20 @@ class Project:
         task = Task(id, min_dur, max_dur)
         self.nodes[id] = task
         return task
+
+    def get_tasks(self):
+        tasks = []
+        for node in self.nodes.values():
+            if isinstance(node, Task):
+                tasks.append(node)
+        return tasks
+
+    def get_gates(self):
+        gates = []
+        for node in self.nodes.values():
+            if isinstance(node, Gate):
+                gates.append(node)
+        return gates
     
     def look_for_node(self, node_id):
         return self.nodes.get(node_id, None)

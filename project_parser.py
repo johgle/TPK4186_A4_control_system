@@ -110,12 +110,14 @@ class ProjectParser():
 # 3. Tester
 # -----------------
 
-parser = ProjectParser()
-checker = Checker()
-mcs = MonteCarloSimulation()
-project = parser.parse_project("ControlSystemProject.xml")
-mcs.calculate_start_and_end_times_for_nodes(project)
-print("start time random node:", project.get_nodes().values()[0].get_start_time())
+# parser = ProjectParser()
+# checker = Checker()
+# project = parser.parse_project("ControlSystemProject.xml")
+# print(project.id)
+# mcs = MonteCarloSimulation(project, 35)
+# mcs.calculate_start_and_end_times_for_nodes()
+# nodes = list(project.get_nodes().values())
+# print("start time random node:", nodes[2].get_start_time())
 # parser.print_project(project)
 
 # print(checker.check_start_node(project))
@@ -131,4 +133,3 @@ print("start time random node:", project.get_nodes().values()[0].get_start_time(
 
 
 
-# https://docs.python.org/3/library/xml.dom.minidom.html
