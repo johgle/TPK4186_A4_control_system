@@ -44,95 +44,6 @@ parser = ProjectParser()
 # 1. Functions
 # --------------------
 
-# Parse project and save in an object
-max_durations = [115, 117, 120]
-# project = parser.parse_project("ControlSystemProject.xml")
-# mcs = MonteCarloSimulation(project, 1000)
-
-
-# # CLASSIFIER
-# for max_duration in max_durations:
-#     all_project_durations = mcs.execute_mc_simulation("ControlSystemProject_simulations.csv", max_duration)
-#     mcs.split_result_into_test_and_training("ControlSystemProject_simulations.csv")
-
-#     project_duration_list = list(all_project_durations.values())
-
-#     # Compute statistics
-#     stats = mcs.calculate_project_statistics(project_duration_list)
-#     print("Project Statistics:", stats, "\n")
-
-#     # Plot histogram
-#     mcs.plot_histogram(project_duration_list)
-
-#     # 3. Loading of training and test sets
-#     # ------------------------------------
-#     training_set = numpy.genfromtxt("training_set_classification.csv", delimiter=',')
-#     training_instances = training_set[1:, 0:-3]
-#     training_labels = training_set[1:, -1]
-
-#     test_set = numpy.genfromtxt("test_set_classification.csv", delimiter=',')
-#     test_instances = test_set[1:, 0:-3]
-#     test_labels = test_set[1:, -1]
-
-
-#     # 4. Classification
-#     # -------------------
-
-#     model_svc = SVC()
-#     model_svc.fit(training_instances, training_labels)
-#     predicted_labels = model_svc.predict(test_instances)
-#     export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "ResultsClassification.csv", "SVC", max_duration)
-
-#     model_dtc = DecisionTreeClassifier()
-#     model_dtc.fit(training_instances, training_labels)
-#     predicted_labels = model_dtc.predict(test_instances)
-#     export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "ResultsClassification.csv", "Decision Tree Classifier", max_duration)
-
-#     model_mlpc = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
-#     model_mlpc.fit(training_instances, training_labels)
-#     predicted_labels = model_mlpc.predict(test_instances)
-#     export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "ResultsClassification.csv", "MLPClassifier", max_duration)
-
-#     model_nc = NearestCentroid()
-#     model_nc.fit(training_instances, training_labels)
-#     predicted_labels = model_nc.predict(test_instances)
-#     export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "ResultsClassification.csv", "Nearest Centroid", max_duration)
-
-# # REGRESSION:
-
-# # 3. Loading of training and test sets
-# training_set = numpy.genfromtxt("training_set_classification.csv", delimiter=',')
-# training_instances = training_set[1:, 0:-3]
-# training_labels = training_set[1:, -1]
-
-# test_set = numpy.genfromtxt("test_set_classification.csv", delimiter=',')
-# test_instances = test_set[1:, 0:-3]
-# test_labels = test_set[1:, -1]
-
-
-# Regression:
-# --------------------------
-
-# model_svr = SVR()
-# model_svr.fit(training_instances, training_labels)
-# predicted_labels = model_svr.predict(test_instances)
-# # print_results(test_labels, predicted_labels, sys.stdout)
-# export_results(test_labels, predicted_labels, "results_regression.csv")
-
-# model_mlpr = MLPRegressor(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 5, 2), random_state=1)
-# model_mlpr.fit(training_instances, training_labels)
-# predicted_labels = model_mlpr.predict(test_instances)
-# # print_results(test_labels, predicted_labels, sys.stdout)
-# export_results(test_labels, predicted_labels, "results_regression.csv")
-
-# model_lr = LogisticRegression(random_state=1)
-# model_lr.fit(training_instances, training_labels)
-# predicted_labels = model_lr.predict(test_instances)
-# # print_results(test_labels, predicted_labels, sys.stdout)
-# export_results(test_labels, predicted_labels, "results_regression.csv")
-
-
-
 def read_a_project_successfully_to_the_program(): #1
     return parser.parse_project("ControlSystemProject.xml")
 
@@ -148,7 +59,7 @@ def check_whether_a_project_is_correctly_designed(): #3
           f"Only one start node, and it's a gate: {start}.\n"+
           f"Only one end node, and it's a gate: {end}.")
     
-def filenamecalculate_stats_and_plot_histogram_using_mcs_results(): #4
+def calculate_stats_and_plot_histogram_using_mcs_results(): #4
     # Add project to program
     project = parser.parse_project("ControlSystemProject.xml")
     
@@ -164,6 +75,84 @@ def filenamecalculate_stats_and_plot_histogram_using_mcs_results(): #4
     # Plot histogram
     mcs.plot_histogram(project_duration_list)
 
+def predict_using_classification(): #5
+    # Parse project and save in an object
+    project = parser.parse_project("ControlSystemProject.xml")
+    mcs = MonteCarloSimulation(project, 1000)
+
+    max_durations = [115, 117, 120] # This is just examples, can be changed
+
+    # Using a for loop to study the different max_durations
+    for max_duration in max_durations:
+        mcs.execute_mc_simulation("ControlSystemProject_simulations.csv", max_duration)
+        mcs.split_result_into_test_and_training("ControlSystemProject_simulations.csv")
+
+        # Generate training and test sets
+        training_set = numpy.genfromtxt("training_set_classification.csv", delimiter=',')
+        training_instances = training_set[1:, 0:-3]
+        training_labels = training_set[1:, -1]
+
+        test_set = numpy.genfromtxt("test_set_classification.csv", delimiter=',')
+        test_instances = test_set[1:, 0:-3]
+        test_labels = test_set[1:, -1]
+
+        # Classification models
+        model_svc = SVC(max_iter=1000)
+        model_svc.fit(training_instances, training_labels)
+        predicted_labels = model_svc.predict(test_instances)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "SVC", max_duration)
+
+        model_dtc = DecisionTreeClassifier()
+        model_dtc.fit(training_instances, training_labels)
+        predicted_labels = model_dtc.predict(test_instances)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "Decision Tree Classifier", max_duration)
+
+        model_mlpc = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=1000)
+        model_mlpc.fit(training_instances, training_labels)
+        predicted_labels = model_mlpc.predict(test_instances)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "MLPClassifier", max_duration)
+
+        model_nc = NearestCentroid()
+        model_nc.fit(training_instances, training_labels)
+        predicted_labels = model_nc.predict(test_instances)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "Nearest Centroid", max_duration)
+
+def predict_using_regression(): #6
+    # Parse project and save in an object
+    project = parser.parse_project("ControlSystemProject.xml")
+    mcs = MonteCarloSimulation(project, 1000)
+
+    max_durations = [115, 117, 120] # This is just examples, can be changed
+
+    # Using a for loop to study the different max_durations
+    for max_duration in max_durations:
+        mcs.execute_mc_simulation("ControlSystemProject_simulations.csv", max_duration)
+        mcs.split_result_into_test_and_training("ControlSystemProject_simulations.csv")
+
+        # Generate training and test sets
+        training_set = numpy.genfromtxt("training_set_classification.csv", delimiter=',')
+        training_instances = training_set[1:, 0:-3]
+        training_labels = training_set[1:, -1]
+
+        test_set = numpy.genfromtxt("test_set_classification.csv", delimiter=',')
+        test_instances = test_set[1:, 0:-3]
+        test_labels = test_set[1:, -1]
+
+        # Regression models
+        model_svr = SVR(max_iter=1000)
+        model_svr.fit(training_instances, training_labels)
+        predicted_labels = model_svr.predict(test_instances)
+        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "SVR", max_duration)
+
+        model_mlpr = MLPRegressor(solver='adam', alpha=1e-5, hidden_layer_sizes=(5, 5, 2), random_state=1, max_iter=2000)
+        model_mlpr.fit(training_instances, training_labels)
+        predicted_labels = model_mlpr.predict(test_instances)
+        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "MLPRegressor", max_duration)
+
+        model_lr = LogisticRegression(random_state=1, max_iter=2000)
+        model_lr.fit(training_instances, training_labels)
+        predicted_labels = model_lr.predict(test_instances)
+        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "Logistic Regression", max_duration)  
 
 # 2. For tester
 # --------------------
@@ -184,7 +173,7 @@ FOR TESTER:
 """
 
 #TODO: CHANGE VALUE HERE, [1-6]:
-TASK_TO_TEST = 4
+TASK_TO_TEST = 6
 
 # 3. main function
 # --------------------
@@ -204,7 +193,7 @@ if __name__ == '__main__':
 
     # Calculate stats and plot histogram for results of Monte Carlo Simulations
     elif TASK_TO_TEST == 4:
-        filenamecalculate_stats_and_plot_histogram_using_mcs_results()
+        calculate_stats_and_plot_histogram_using_mcs_results()
 
     # Predict project durations using classification-algorithms
     elif TASK_TO_TEST == 5:

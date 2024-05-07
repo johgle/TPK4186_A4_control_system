@@ -131,16 +131,16 @@ class MonteCarloSimulation:
         quantile_90 = np.percentile(durations, 90)
         
         return {
-            "mean_duration": mean_duration,
-            "std_dev": std_dev,
-            "min_duration": min_duration,
-            "max_duration": max_duration,
-            "median": median,
-            "quantile_90": quantile_90}
+            "mean_duration": round(mean_duration,2),
+            "std_dev": round(std_dev,2),
+            "min_duration": round(min_duration,2),
+            "max_duration": round(max_duration,2),
+            "median": round(median,2),
+            "quantile_90": round(quantile_90,2)}
 
     # Function to plot histogram
     def plot_histogram(self, durations, bins=20):
-        plt.hist(durations, bins=bins, alpha=0.7, color='b', edgecolor='black')
+        plt.hist(durations, bins=bins, alpha=0.7, color='mediumvioletred', edgecolor='black')
         plt.xlabel("Project Duration")
         plt.ylabel("Frequency")
         plt.title("Histogram of Project Durations")

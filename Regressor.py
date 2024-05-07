@@ -19,19 +19,21 @@ from sklearn import metrics
 # 3. Functions to print results
 # -----------------------------
 
-def export_results(actual_rewards, predicted_rewards, filename):
+def export_regression_results(actual_rewards, predicted_rewards, filename, algorithm_id, max_duration):
     output = open(filename, "a") # a (append) so that we get data from multiple algorithms in one file
-    print_results(actual_rewards, predicted_rewards, output)
+    print_results(actual_rewards, predicted_rewards, output, algorithm_id, max_duration)
     output.close()
     
-def print_results(actual_rewards, predicted_rewards, output):
+def print_results(actual_rewards, predicted_rewards, output, algorithm_id, max_duration):
+    output.write(f"{algorithm_id.upper()}. Max duration: {max_duration}\n")   
     output.write("Actual duration\tPredicted duration\n")
     for i in range(0, len(actual_rewards)):
-        output.write("{0:g}\t{1:g}\n".format(actual_rewards[i], round(predicted_rewards[i], 0)))
-    output.write("\n")
-    output.write("MAE\t{0:g}\n".format(metrics.mean_absolute_error(actual_rewards, predicted_rewards)))
-    output.write("RMSE\t{0:g}\n".format(math.sqrt(metrics.mean_squared_error(actual_rewards, predicted_rewards))))
-    output.write("R^2\t{0:g}\n".format(metrics.r2_score(actual_rewards, predicted_rewards)))
+        output.write("\t\t{0:g}\t\t\t{1:g}\n".format(actual_rewards[i], round(predicted_rewards[i], 0)))
+    output.write(f"\nData for {algorithm_id} (max duration: {max_duration}):\n")
+    output.write("MAE\t{0:g}\n".format(round(metrics.mean_absolute_error(actual_rewards, predicted_rewards),3)))
+    output.write("MSE\t{0:g}\n".format(round(math.sqrt(metrics.mean_squared_error(actual_rewards, predicted_rewards)),3)))
+    output.write("R^2\t{0:g}\n".format(round(metrics.r2_score(actual_rewards, predicted_rewards),3)))
+    output.write("\n------------------------------------------------------------\n")
 
 
 

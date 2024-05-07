@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 # -----------------------------------------
 
 def export_confusion_matrix(labels, actual_labels, predicted_labels, filename, algorithm_id, max_duration):
-    output = open(filename, mode="a")
+    output = open(filename, mode="a") # a (append) so that we get data from multiple algorithms in one file
     print_confusion_matrix(labels, actual_labels, predicted_labels, output, algorithm_id, max_duration)
     output.close()
 
