@@ -75,11 +75,11 @@ class MonteCarloSimulation:
         return self.project
     
     # Function to execute the Monte Carlo Simulation and write the results to a .csv-file.
-    def execute_mc_simulation(self, csv_filename):
-        with open(csv_filename, 'w', newline='') as csvfile:
+    def execute_mc_simulation(self, csv_filename, max_duration):
+        with open(csv_filename, mode='w', newline='') as file:
             
-            fieldnames = ['Run'] + [task.get_id() for task in self.project.get_tasks()] + ["Total duration at mid_gate", "Total duration"]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            fieldnames = ['Run'] + [task.get_id() for task in self.project.get_tasks()] + ["Total duration at mid_gate", "Total duration", "Label"]
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
 
             writer.writeheader()
             
@@ -89,12 +89,9 @@ class MonteCarloSimulation:
                 self.calculate_start_and_end_times_for_nodes()
                 
                 # Find mid gate
-                mid_gate = None
-                for gate in self.project.get_gates():
-                    if gate.id == "MidProject":
-                        mid_gate = gate
+                mid_gate = self.project.look_for_node("MidProject")
                 
-                # Find tasks up until the mid gate
+                # Find tasks up to the mid gate
                 tasks_until_mid_gate = []
                 for task in self.project.get_tasks():
                     if not task.get_end_time() > mid_gate.get_start_time():
@@ -115,14 +112,17 @@ class MonteCarloSimulation:
                 all_project_durations[i+1] = total_project_duration
 
                 #Write data to csv
+                # max_duration = 120
                 writer.writerow({'Run': i+1,
                                  **task_durations,
-                                 "Total duration at mid_gate": round(total_mid_project_duration,4),
-                                 "Total duration": round(total_project_duration,4)})
+                                 "Total duration at mid_gate": round(total_mid_project_duration,2),
+                                 "Total duration": round(total_project_duration,2),
+                                 "Label": 0 if total_project_duration < max_duration else 1})
+        
         return all_project_durations
             
     # Function to generate project statistics
-    def project_statistics(self, durations):
+    def calculate_project_statistics(self, durations):
         mean_duration = np.mean(durations)
         std_dev = np.std(durations)
         min_duration = np.min(durations)
@@ -146,6 +146,35 @@ class MonteCarloSimulation:
         plt.title("Histogram of Project Durations")
         plt.show()
 
+    def split_result_into_test_and_training(self, original_csv):
+        training_percentage = 0.8 # which means test_percentage = 0.2
+        
+        # File names
+        training_csv = "training_set_classification.csv"
+        testing_csv = "test_set_classification.csv"
+
+        # Read the CSV into memory
+        with open(original_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = list(csv.reader(file))
+            header = reader[0]
+            rows = reader[1:]
+
+        random.shuffle(rows) #shuffle rows so that it is random which row is in the testing and training set
+        split_index = int(training_percentage * len(rows))
+
+        # Split into test data and training data
+        training_rows = rows[:split_index]
+        testing_rows = rows[split_index:]
+
+        with open(training_csv, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(header)
+            writer.writerows(training_rows)
+
+        with open(testing_csv, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(header)
+            writer.writerows(testing_rows)
 
 
 '''

@@ -20,8 +20,6 @@ class Checker:
                 if target_node == node:
                     target_nodes.append(target_node)
             
-        # print("target nodes:", target_nodes)
-
         start_gates = []
         for node in gates:
             if node not in target_nodes:

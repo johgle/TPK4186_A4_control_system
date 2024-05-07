@@ -2,72 +2,37 @@
 # Classifier.py
 # by Antoine Rauzy
 # Copyrights (c) 2022 NTNU
-#
-# Table of Contents
-# -----------------
-# 1. Required Modules
-# 2. Functions to print results
-# 3. Loading of training and test sets
-# 4. Classification
+# NOTE: Changed by Johanne Glende to fit assignment.
 
 # 1. Required Modules
 # -------------------
+from sklearn.metrics import accuracy_score
 
-import sys
-import numpy
+# 2. Functions to print results as matrixes
+# -----------------------------------------
 
-# 3. Functions to print results
-# -----------------------------
-
-def ExportConfusionMatrix(labels, actualLabels, predictedLabels, fileName):
-    output = open(fileName, "w")
-    PrintConfusionMatrix(labels, actualLabels, predictedLabels, output)
+def export_confusion_matrix(labels, actual_labels, predicted_labels, filename, algorithm_id, max_duration):
+    output = open(filename, mode="a")
+    print_confusion_matrix(labels, actual_labels, predicted_labels, output, algorithm_id, max_duration)
     output.close()
 
-def PrintConfusionMatrix(labels, actualLabels, predictedLabels, output):
-    numberOfLabels = len(labels)
-    counts = [[0 for _ in range(0, numberOfLabels)] for _ in range(0, numberOfLabels)]
-    for i in range(0, len(actualLabels)):
-        counts[int(actualLabels[i])][int(predictedLabels[i])] += 1
-    for column in range(0, numberOfLabels):
+def print_confusion_matrix(labels, actual_labels, predicted_labels, output, algorithm_id, max_duration):
+    output.write(f"{algorithm_id.upper()}. Max duration: {max_duration}\n")
+    
+    accuracy = accuracy_score(actual_labels, predicted_labels)
+    output.write(f"Accuracy {algorithm_id}: {accuracy}\n")
+    
+    number_of_labels = len(labels)
+    counts = [[0 for _ in range(0, number_of_labels)] for _ in range(0, number_of_labels)]
+    for i in range(0, len(actual_labels)):
+        counts[int(actual_labels[i])][int(predicted_labels[i])] += 1
+    output.write("\t\t\t\tPredicted \n\t\t\t")
+    for column in range(0, number_of_labels):
         output.write("\t{0:s}".format(labels[column]))
     output.write("\n")
-    for row in range(0, numberOfLabels):
-        output.write("{0:s}".format(labels[row]))
-        for column in range(0, numberOfLabels):
-            output.write("\t{0:d}".format(counts[row][column]))
+    for row in range(0, number_of_labels):
+        output.write("Actual {0:s}\t\t".format(labels[row]))
+        for column in range(0, number_of_labels):
+            output.write("{0:d}\t\t".format(counts[row][column]))
         output.write("\n")
-
-# 2. Loading of training and test sets
-# ------------------------------------
-
-trainingSet = numpy.genfromtxt("trainingSetClassification.csv")
-trainingInstances = trainingSet[:, 0:-2]
-trainingLabels = trainingSet[:, -1]
-
-testSet = numpy.genfromtxt("testSetClassification.csv")
-testInstances = testSet[:, 0:-2]
-testLabels = testSet[:, -1]
-
-# 4. Classification
-# -------------------
-
-# from sklearn.svm import SVC
-# model = SVC()
-# model.fit(trainingInstances, trainingLabels)
-
-from sklearn.tree import DecisionTreeClassifier
-model = DecisionTreeClassifier()
-model.fit(trainingInstances, trainingLabels)
-
-# from sklearn.neural_network import MLPClassifier
-# model = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
-# model.fit(trainingInstances, trainingLabels)
-
-# from sklearn.neighbors import NearestCentroid
-# model = NearestCentroid()
-# model.fit(trainingInstances, trainingLabels)
-
-predictedLabels = model.predict(testInstances)
-PrintConfusionMatrix(["on-time", "delayed", "failed"], testLabels, predictedLabels, sys.stdout)
-ExportConfusionMatrix(["on-time", "delayed", "failed"], testLabels, predictedLabels, "ResultsClassification.csv")
+    output.write("\n-------------------------------------------------------\n\n")
