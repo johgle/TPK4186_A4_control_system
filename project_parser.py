@@ -3,21 +3,16 @@
 # -----------------
 # 1. Imported modules
 # 2. Parser
-# 3. Tester
 
 # 1. Imported modules
 # -----------------
+import re
 import xml.dom.minidom #dom means document
-# from task import Task
-# from lane import Lane
-# from node import Node
-# from gate import Gate
 from gate import Gate
 from monte_carlo_simulation import MonteCarloSimulation
 from project import Project
 from checker import Checker
 
-import re
 
 # 2. Parser
 # -----------------
@@ -45,15 +40,12 @@ class ProjectParser():
         lanes = input_file.getElementsByTagName("lane")
         for l in lanes:
             new_lane = project.new_lane(l.getAttribute("name"))
-            # print("\nLane:",l.getAttribute("name"))
 
             tasks = l.getElementsByTagName("task")
             for t in tasks: 
-                # print("Task:",t.getAttribute("name"))
                 new_task = project.new_task(t.getAttribute("name"), float(t.getAttribute("minimum-duration")), float(t.getAttribute("maximum-duration")))
                 new_task.set_lane(new_lane)
                 new_lane.append_task(new_task)
-            # print("Task in lane:",new_lane.tasks)
             
         #Add constraints to project
         constraints = input_file.getElementsByTagName("precedence-constraint")
@@ -64,9 +56,7 @@ class ProjectParser():
             new_constraint = project.new_constraint(source_node, target_node)
             source_node.add_out_constraints(new_constraint)
             target_node.add_in_constraints(new_constraint)
-            # print("Source - Target:",c.getAttribute("source"),"-",c.getAttribute("target"))
 
-        # print(project.print_constraints())
         return project
 
     def print_project(self, project):
@@ -105,31 +95,4 @@ class ProjectParser():
     
     def print_constraint(self, constraint):
         print("\tConstraint", constraint.source_node.id, "-", constraint.target_node.id)
-
-
-# 3. Tester
-# -----------------
-
-# parser = ProjectParser()
-# checker = Checker()
-# project = parser.parse_project("ControlSystemProject.xml")
-# print(project.id)
-# mcs = MonteCarloSimulation(project, 35)
-# mcs.calculate_start_and_end_times_for_nodes()
-# nodes = list(project.get_nodes().values())
-# print("start time random node:", nodes[2].get_start_time())
-# parser.print_project(project)
-
-# print(checker.check_start_node(project))
-# print(checker.check_end_node(project))
-
-# print(checker.check_start_node_dict(project.nodes))
-# print(checker.check_end_node_dict(project.nodes))
-
-
-# print(project.look_for_node("begin").get_in_constraints())
-# print(project.look_for_node("begin").get_out_constraints()[0].target_node.id)
-# print(project.look_for_node("begin").get_out_constraints()[0].source_node.id)
-
-
 

@@ -2,7 +2,7 @@
 # Regressor.py
 # by Antoine Rauzy
 # Copyrights (c) 2022 NTNU
-# NOTE: Changed by Johanne Glende to fit assignment.
+# NOTE: Changed by Johanne Glende to fit assignment 4 spring 2024.
 
 # Table of Contents
 # -----------------
@@ -12,11 +12,11 @@
 # 1. Required Modules
 # -------------------
 import sys
-import math
 import numpy
+import math
 from sklearn import metrics
 
-# 3. Functions to print results
+# 2. Functions to print results
 # -----------------------------
 
 def export_regression_results(actual_rewards, predicted_rewards, filename, algorithm_id, max_duration):

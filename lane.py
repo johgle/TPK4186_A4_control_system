@@ -1,7 +1,4 @@
 
-import random
-
-
 class Lane:
 
     def __init__(self, id):

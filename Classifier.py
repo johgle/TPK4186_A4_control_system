@@ -2,7 +2,7 @@
 # Classifier.py
 # by Antoine Rauzy
 # Copyrights (c) 2022 NTNU
-# NOTE: Changed by Johanne Glende to fit assignment.
+# NOTE: Changed by Johanne Glende to fit assignment 4 spring 2024.
 
 # 1. Required Modules
 # -------------------

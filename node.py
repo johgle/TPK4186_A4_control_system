@@ -3,12 +3,11 @@ class Node:
 
     def __init__(self, id): #in_constraints, out_constraints):
         self.id = id
-        self.in_constraints = [] #in_constraints
+        self.in_constraints = []
         self.out_constraints = []
-        self.start_time = -1  #start tid er gitt fra forrige node sin egen tid
-        self.end_time = -1    # end time er gitt start tid + faktisk (actual) tid.
-                                # End tid for denne er start tid for neste node.
-        self.actual_time = None # tid som kommer fra simulasjonene som blir kjørt. 
+        self.start_time = -1  #start_time is from the former node's end_time. If start_gate it is 0.
+        self.end_time = -1    # end_time is start_time + actual_time
+        self.actual_time = None # actual_time is None until the simulations is run and it is updated with real data.
 
     def get_id(self):
         return self.id

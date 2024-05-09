@@ -67,7 +67,6 @@ class Project:
     def new_lane(self, id):
         lane = Lane(id)
         self.lanes[id] = lane
-        # print("Lane added")
         return lane
 
     def print_nodes(self):

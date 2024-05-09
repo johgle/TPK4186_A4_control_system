@@ -1,8 +1,6 @@
 
 from node import Node
 
-#For task we use triangular distributions. Between minimum and maximum on x-axis, and a top "mode" on y-axis. Mode = Expected duration.
-
 class Task(Node):
 
     def __init__(self, id, minimum_duration, maximum_duration):

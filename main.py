@@ -2,7 +2,7 @@
 
 '''
 File Overview:
-Resources, Required Modules
+Resources, Required Modules, Instances
 1. Functions
 2. For tester (Want to test? Search for TODO to find it easily)
 3. main function
@@ -40,6 +40,7 @@ from sklearn.svm import SVR
 # Instances
 # --------------------
 parser = ProjectParser()
+checker = Checker()
 
 # 1. Functions
 # --------------------
@@ -51,7 +52,6 @@ def print_project_to_terminal(): #2
     parser.print_project(read_a_project_successfully_to_the_program())
 
 def check_whether_a_project_is_correctly_designed(): #3
-    checker = Checker()
     project = parser.parse_project("ControlSystemProject.xml")
     start = checker.check_start_node(project)[0]
     end = checker.check_end_node(project)[0]
@@ -60,7 +60,7 @@ def check_whether_a_project_is_correctly_designed(): #3
           f"Only one end node, and it's a gate: {end}.")
     
 def calculate_stats_and_plot_histogram_using_mcs_results(): #4
-    # Add project to program
+    # Parse project and save in an object
     project = parser.parse_project("ControlSystemProject.xml")
     
     # Run MCSimulation and extract duration of all projects
@@ -100,22 +100,22 @@ def predict_using_classification(): #5
         model_svc = SVC(max_iter=1000)
         model_svc.fit(training_instances, training_labels)
         predicted_labels = model_svc.predict(test_instances)
-        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "SVC", max_duration)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification_done_by_tester.csv", "SVC", max_duration)
 
         model_dtc = DecisionTreeClassifier()
         model_dtc.fit(training_instances, training_labels)
         predicted_labels = model_dtc.predict(test_instances)
-        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "Decision Tree Classifier", max_duration)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification_done_by_tester.csv", "Decision Tree Classifier", max_duration)
 
         model_mlpc = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=1000)
         model_mlpc.fit(training_instances, training_labels)
         predicted_labels = model_mlpc.predict(test_instances)
-        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "MLPClassifier", max_duration)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification_done_by_tester.csv", "MLPClassifier", max_duration)
 
         model_nc = NearestCentroid()
         model_nc.fit(training_instances, training_labels)
         predicted_labels = model_nc.predict(test_instances)
-        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification.csv", "Nearest Centroid", max_duration)
+        export_confusion_matrix(["on-time", "delayed"], test_labels, predicted_labels, "results_classification_done_by_tester.csv", "Nearest Centroid", max_duration)
 
 def predict_using_regression(): #6
     # Parse project and save in an object
@@ -142,17 +142,17 @@ def predict_using_regression(): #6
         model_svr = SVR(max_iter=1000)
         model_svr.fit(training_instances, training_labels)
         predicted_labels = model_svr.predict(test_instances)
-        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "SVR", max_duration)
+        export_regression_results(test_labels, predicted_labels, "results_regression_done_by_tester.csv", "SVR", max_duration)
 
         model_mlpr = MLPRegressor(solver='adam', alpha=1e-5, hidden_layer_sizes=(5, 5, 2), random_state=1, max_iter=2000)
         model_mlpr.fit(training_instances, training_labels)
         predicted_labels = model_mlpr.predict(test_instances)
-        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "MLPRegressor", max_duration)
+        export_regression_results(test_labels, predicted_labels, "results_regression_done_by_tester.csv", "MLPRegressor", max_duration)
 
         model_lr = LogisticRegression(random_state=1, max_iter=2000)
         model_lr.fit(training_instances, training_labels)
         predicted_labels = model_lr.predict(test_instances)
-        export_regression_results(test_labels, predicted_labels, "results_regression.csv", "Logistic Regression", max_duration)  
+        export_regression_results(test_labels, predicted_labels, "results_regression_done_by_tester.csv", "Logistic Regression", max_duration)  
 
 # 2. For tester
 # --------------------
@@ -172,8 +172,11 @@ FOR TESTER:
     Note: Every other number is not allowed and will print out an error-message to the terminal
 """
 
+# - - - - - - - - - - - - - - - - -
 #TODO: CHANGE VALUE HERE, [1-6]:
-TASK_TO_TEST = 6
+TASK_TO_TEST = 1
+# - - - - - - - - - - - - - - - - -
+
 
 # 3. main function
 # --------------------
