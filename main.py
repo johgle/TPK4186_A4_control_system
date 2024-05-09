@@ -182,7 +182,7 @@ TASK_TO_TEST = 1
 # --------------------
 
 if __name__ == '__main__':
-    #  Read a project successfully to the program:
+    #  Read a project successfully to the program
     if TASK_TO_TEST == 1:
         read_a_project_successfully_to_the_program()
     
